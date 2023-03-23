@@ -8,7 +8,7 @@ namespace CrudNet7MVC.Controllers
 {
     public class HomeController : Controller
     {
-       private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
 
         public HomeController(ApplicationDbContext context)
@@ -29,16 +29,46 @@ namespace CrudNet7MVC.Controllers
             return View();
         }
 
-        [HttpPost]       
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Contact contact)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _context.Contacts.Add(contact);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var contact = _context.Contacts.Find(id);
+            if (contact == null)
+            {
+                return NotFound();
+            }           
+            return View(contact);          
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Contact contact)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Contacts.Update(contact);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(contact);
         }
 
 
