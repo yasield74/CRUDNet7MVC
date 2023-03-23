@@ -72,6 +72,21 @@ namespace CrudNet7MVC.Controllers
         }
 
 
+        [HttpGet]
+        public IActionResult Details(int? id) { 
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var contact = _context.Contacts.Find(id);
+            if(contact == null)
+            {
+                return NotFound();
+            }
+            return View(contact);   
+        }
+
+
 
         public IActionResult Privacy()
         {
