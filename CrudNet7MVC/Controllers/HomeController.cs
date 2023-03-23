@@ -86,6 +86,36 @@ namespace CrudNet7MVC.Controllers
             return View(contact);   
         }
 
+        [HttpGet]
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var contact = _context.Contacts.Find(id);
+            if (contact == null)
+            {
+                return NotFound();  
+            }
+            return View(contact);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteContact (int? id)
+        {
+            var contact = await _context.Contacts.FindAsync(id);
+            if(contact == null)
+            {
+                return View();
+            }
+            //Delete 
+            _context.Contacts.Remove(contact);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
 
 
         public IActionResult Privacy()
